@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Text, View} from 'react-native';
+import {SafeAreaView, Button, Text, View} from 'react-native';
 import {RNCamera} from 'react-native-camera';
 
 class App extends Component {
@@ -7,6 +7,10 @@ class App extends Component {
     super(props);
     this.camera = null;
     this.barcodeCodes = [];
+
+    state = {
+      bc: '',
+    };
 
     this.state = {
       camera: {
@@ -25,6 +29,9 @@ class App extends Component {
         console.warn('onBarCodeRead call');
       }
     }
+
+    this.setState({bc: scanResult.data});
+
     return;
   }
 
@@ -71,17 +78,12 @@ class App extends Component {
           type={this.state.camera.type}
         />
         <View style={[styles.overlay, styles.topOverlay]}>
-          <Text style={styles.scanScreenMessage}>Please scan the barcode.</Text>
+          <Text style={styles.scanScreenMessage}>
+            Please scan your driver's license
+          </Text>
         </View>
-        <View style={[styles.overlay, styles.bottomOverlay]}>
-          <Button
-            onPress={() => {
-              console.log('scan clicked');
-            }}
-            style={styles.enterBarcodeManualButton}
-            title="Enter Barcode"
-          />
-        </View>
+
+        <Text style={styles.underneath}>{this.state.bc}</Text>
       </View>
     );
   }
@@ -90,6 +92,7 @@ class App extends Component {
 const styles = {
   container: {
     flex: 1,
+    marginBottom: 250,
   },
   preview: {
     flex: 1,
@@ -121,13 +124,18 @@ const styles = {
     padding: 15,
     backgroundColor: 'white',
     borderRadius: 40,
+    textAlign: 'center',
   },
   scanScreenMessage: {
     fontSize: 14,
     color: 'white',
     textAlign: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginTop: 10,
+  },
+  underneath: {
+    fontSize: 14,
+    color: 'black',
+    textAlign: 'left',
   },
 };
 
